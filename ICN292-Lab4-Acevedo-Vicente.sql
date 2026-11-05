@@ -152,6 +152,12 @@ FROM   pagos p
 JOIN   autores a ON p.id_autor = a.id_autor
 ORDER BY p.fecha_pago;
 
+-- 10b: total pagado a cada autor
+SELECT a.nombre AS autor, SUM(p.monto) AS total_pagado
+FROM   pagos p
+JOIN   autores a ON p.id_autor = a.id_autor
+GROUP BY a.id_autor, a.nombre
+ORDER BY total_pagado DESC;
 
 
 

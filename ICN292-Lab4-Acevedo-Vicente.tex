@@ -1,0 +1,246 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+
+
+\definecolor{fondo}{RGB}{246,248,250}
+\definecolor{clave}{RGB}{0,92,197}
+\definecolor{texto}{RGB}{181,80,0}
+\definecolor{comentario}{RGB}{106,115,125}
+
+\lstset{
+  language=SQL,
+  upquote=true,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{clave}\bfseries,
+  stringstyle=\color{texto},
+  commentstyle=\color{comentario}\itshape,
+  backgroundcolor=\color{fondo},
+  frame=single,
+  rulecolor=\color{black!15},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  morekeywords={ENUM,AUTO_INCREMENT,LIMIT,DECIMAL,DATE,IF,EXISTS},
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+           {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+}
+
+\newcommand{\captura}[1]{%
+  \begin{center}
+    \includegraphics[width=\linewidth,height=0.5\textheight,keepaspectratio]{#1}
+  \end{center}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+
+\includegraphics[width=5cm]{logo_usm.png}\\[0.8cm]
+
+{\Large\bfseries Universidad Técnica Federico Santa María}\\[0.2cm]
+{\large Departamento de Industrias}
+
+\vspace{1.6cm}
+
+{\Huge\bfseries Laboratorio 4}\\[0.5cm]
+{\LARGE\bfseries Bases de Datos Relacionales con MySQL}\\[0.7cm]
+{\large Sistemas de Información para la Gestión}
+
+\vspace{1.6cm}
+
+\begin{tabular}{rl}
+\textbf{Asignatura:}  & ICN292 Sistemas de Información para la Gestión \\[0.35cm]
+\textbf{Profesor:}    & José González \\[0.35cm]
+\textbf{Estudiante:}  & Vicente Acevedo \\[0.35cm]
+\textbf{Rut:}         & 21.430.418-K \\[0.35cm]
+\textbf{Repositorio:} & \url{https://github.com/vacevedo3110/ICN292-Lab4-Acevedo-Vicente} \\
+\end{tabular}
+
+\vfill
+
+{\large 7 de noviembre de 2026}
+
+\end{titlepage}
+
+
+\section*{Consulta 1}
+
+\begin{lstlisting}
+Select nombre, genero
+FROM autores
+where pais <> 'Chile' or pais IS NULL
+ORDER by nombre;
+\end{lstlisting}
+
+\captura{CONSULTA 1.png}
+
+\noindent La comparación \texttt{pais <>~\textquotesingle Chile\textquotesingle} devuelve verdadero para los países distintos de Chile y desconocido (NULL) para Kenji Arakawa, por eso se agrega \texttt{OR pais IS NULL} para que contabilice todos los paises que no son Chile. 
+
+\newpage
+\section*{Consulta 2}
+
+\begin{lstlisting}
+SELECT titulo, paginas
+from libros
+where paginas between 190 and 220
+order by paginas;
+\end{lstlisting}
+
+\captura{Consulta 2.png}
+
+\newpage
+\section*{Consulta 3}
+
+\begin{lstlisting}
+Select count(*) AS total_libros,
+SUM(ejemplares_vendidos) AS total_ejemplares,
+AVG(paginas) AS promedio_paginas,
+min(anio) AS anio_mas_antiguo,
+max(ejemplares_vendidos) AS max_ejemplares_vendidos
+FROM libros;
+\end{lstlisting}
+
+\captura{Consulta 3 .png}
+
+\newpage
+\section*{Consulta 4}
+
+\begin{lstlisting}
+Select  Distinct genero
+from autores
+order by genero;
+\end{lstlisting}
+
+\captura{Consulta 4.png}
+
+\newpage
+\section*{Consulta 5}
+
+\begin{lstlisting}
+SELECT a.nombre, COUNT(*) AS libros_2024
+FROM   autores a
+JOIN   libros l ON a.id_autor = l.id_autor
+WHERE  l.anio = 2024
+GROUP BY a.id_autor, a.nombre
+HAVING COUNT(*) > 1
+ORDER BY a.nombre;
+\end{lstlisting}
+
+\captura{Consulta 5 .png}
+
+\newpage
+\section*{Consulta 6}
+
+\begin{lstlisting}
+Select titulo, ejemplares_vendidos
+from libros
+where anio =2024 and ejemplares_vendidos> 2000
+order by ejemplares_vendidos DESC limit 3;
+\end{lstlisting}
+
+\captura{Consulta 6.png}
+
+\newpage
+\section*{Consulta 7}
+
+\begin{lstlisting}
+Insert into libros (id_autor, titulo, paginas, ejemplares_vendidos, anio)
+VALUES( 3, 'Papel Mojado', 260, 50, 2024);
+
+Select * from libros where titulo = 'Papel Mojado';
+Delete from libros where titulo = 'Papel Mojado';
+Select * from libros where titulo = 'Papel Mojado';
+\end{lstlisting}
+
+\captura{Consulta 7.1 .png}
+
+\newpage
+\captura{Consulta 7.2.png}
+
+\newpage
+\section*{Consulta 8}
+
+\begin{lstlisting}
+SELECT titulo, ejemplares_vendidos FROM libros WHERE titulo = 'Cielo de Enero';
+
+UPDATE libros
+SET    ejemplares_vendidos = ejemplares_vendidos + 100
+WHERE  titulo = 'Cielo de Enero';
+
+SELECT titulo, ejemplares_vendidos FROM libros WHERE titulo = 'Cielo de Enero';
+\end{lstlisting}
+
+\captura{Consulta 8.png}
+
+\newpage
+\captura{Consulta 8.2.png}
+\captura{Consulta 8.3.png}
+
+\newpage
+\section*{Consulta 9}
+
+\begin{lstlisting}
+INSERT INTO colecciones (titulo, fecha_publicacion) VALUES
+('Narrativa Austral',   '2022-03-15'),
+('Pensamiento y Verso', '2022-09-01'),
+('Austral Infantil',    '2023-04-23');
+
+UPDATE libros SET id_coleccion = 1 WHERE id_autor = 1 OR id_autor = 5;
+UPDATE libros SET id_coleccion = 2 WHERE id_autor = 2 OR id_autor = 3;
+UPDATE libros SET id_coleccion = 3 WHERE id_autor = 4;
+
+SELECT l.titulo            AS libro,
+       c.titulo            AS coleccion,
+       c.fecha_publicacion AS fecha_coleccion
+FROM   libros l
+JOIN   colecciones c ON l.id_coleccion = c.id_coleccion
+ORDER BY c.fecha_publicacion, l.titulo;
+\end{lstlisting}
+
+\captura{Consulta 9 .png}
+
+\newpage
+\section*{Consulta 10}
+
+\begin{lstlisting}
+INSERT INTO pagos (id_autor, fecha_pago, monto) VALUES
+(4, '2026-03-31', 850000.00),
+(1, '2026-04-15', 420500.50),
+(4, '2026-06-30', 610250.75),
+(5, '2026-07-10', 735000.00);
+
+-- 10a: cada pago con autor, fecha y monto
+SELECT a.nombre AS autor, p.fecha_pago, p.monto
+FROM   pagos p
+JOIN   autores a ON p.id_autor = a.id_autor
+ORDER BY p.fecha_pago;
+\end{lstlisting}
+
+\captura{Consulta 10a.png}
+
+\newpage
+\begin{lstlisting}
+-- 10b: total pagado a cada autor
+SELECT a.nombre AS autor, SUM(p.monto) AS total_pagado
+FROM   pagos p
+JOIN   autores a ON p.id_autor = a.id_autor
+GROUP BY a.id_autor, a.nombre
+ORDER BY total_pagado DESC;
+\end{lstlisting}
+
+\captura{Consulta 10b.png}
+
+\end{document}
